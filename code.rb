@@ -28,4 +28,7 @@ class Calculator
     # This function will build my Poker chart 2D array of all possible hands.
     # Will build three different ones for short stack, avg stack and a big stack.
   end
+  def calculate
+    # Takes user data figures out what chart to use and spits back out the appropriate action.
+  end
 end
