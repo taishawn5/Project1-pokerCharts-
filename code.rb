@@ -48,11 +48,15 @@ class Position
   def pos3?; end
   def pos4?; end
   def pos5?; end
+  def pos6?; end
+  def pos7?; end
+  def pos8?; end
 end
 
 class Card
   attr_accessor :value, :suit
   def initialize(value, suit)
+    #value will be 1-13 (Ace-King)
     @value = value
     @suit = suit
   end
@@ -67,25 +71,42 @@ class Hand
   end
 
   def pair?
+    return true if (card1.value - card2.value).zero?
   end
 
   def high_value
+    #figure out what high value should be returning.
+    #strength of hand on a scale (1-100)?
   end
 
   def suited?
+    return true if card1.suit == card2.suit
   end
 end
 
 
 class Stack
-  def initialize(current_blind, chip_stack); end
-  def small?; end
-  def average?; end
-  def large?; end
+  bb_amt = 0
+
+  def initialize(current_blind, chip_stack)
+    bb_amt = chip_stack / current_blind
+  end
+
+  def small?
+    return true if bb_amt <= 20
+  end
+
+  def average?
+    return true if bb_amt > 20 && bb_amt <= 40
+  end
+  def large?
+    return true if bb_amt > 40
+  end
 end
 
 
 def calculate_action(position, hand, stack)
+  #after gathering all information can use functions to calculate what the user should do.
   return Actions::RAISE if hand.pair? && hand.high_value > 5
   return Actions::FOLD
 end
