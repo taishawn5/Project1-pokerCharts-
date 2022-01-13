@@ -1,37 +1,3 @@
-# class Info
-  # Gathers user data and information
-
-  # def initialize
-  #   @position = ''
-  #   @players = 0
-  #   @amt_blinds = 0
-  # end
-
-  # def userData
-  #   puts 'How many blinds do you have? '
-  #   @amt_blinds = gets.chomp
-  #   puts 'How many players are at your table?'
-  #   @players = gets.chomp
-  #   puts 'What position are you in (please enter in corresponding number)?
-  #   1.SB 2.BB 3.UTG 4.UTG+1 5.UTG+2 6.LJ 7.HJ 8.CO 9.D'
-  #   position = gets.chomp
-  # end
-# end
-
-# Creates and calculates value of hands and what the user should do with that hand.
-# class Calculator
-#
-#   def initialize
-#     super
-#   end
-#   def build
-#     # This function will build my Poker chart 2D array of all possible hands.
-#     # Will build three different ones for short stack, avg stack and a big stack.
-#   end
-#   def calculate
-#     # Takes user data figures out what chart to use and spits back out the appropriate action.
-#   end
-# end
 
 class Actions
   RAISE = 'raise'
@@ -47,24 +13,35 @@ class Position
   end
   # Position one will correspond to the under the gun player and so forth
   def pos1?
-    return true if @button_index == 7 && (@position == 1)
-    return true if @button_index == 8 && (@position == 2)
-    return true if @button_index == 9 && (@position == 3)
-    return true if @button_index + 3 == @position
+    return true if @button_index == 6 && (@position == 1)
+    return true if @button_index == 7 && (@position == 1) || (@position == 2)
+    return true if @button_index == 8 && (@position == 2) || (@position == 3)
+    return true if @button_index == 9 && (@position == 3) || (@position == 4)
+    return true if @button_index + 3 == @position || @button_index + 4 == @position
   end
   def pos2?
-    return true if @button_index == 6 && (@position == 1)
-    return true if @button_index == 7 && (@position == 2)
-    return true if @button_index == 8 && (@position == 3)
-    return true if @button_index == 9 && (@position == 4)
-    return true if @button_index + 4 == @position
+    return true if @button_index == 4 && (@position == 1)
+    return true if @button_index == 5 && (@position == 1) || (@position == 2)
+    return true if @button_index == 6 && (@position == 2) || (@position == 3)
+    return true if @button_index == 7 && (@position == 3) || (@position == 4)
+    return true if @button_index + 5 == @position || @button_index + 6 == @position
   end
-  def pos3?; end
-  def pos4?; end
-  def pos5?; end
-  def pos6?; end
-  def pos7?; end
-  def pos8?; end
+  def pos3?
+    return true if @button_index == 2 && (@position == 1)
+    return true if @button_index == 3 && (@position == 1) || (@position == 2)
+    return true if @button_index == 4 && (@position == 2) || (@position == 3)
+    return true if @button_index == 5 && (@position == 3) || (@position == 4)
+    return true if @button_index + 7 == @position || @button_index + 8 == @position
+  end
+  def pos4?
+    return true if @button_index == @position
+  end
+  def pos5?
+    if @button_index == 9
+      return true if @position == 1
+    end
+    return true if @button_index + 1 == @position
+  end
 end
 
 class Card
@@ -85,7 +62,7 @@ class Hand
   end
 
   def pair?
-    return true if (card1.value - card2.value).zero?
+    return true if card1.value == card2.value
   end
 
   def high_value
