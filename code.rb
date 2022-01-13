@@ -41,10 +41,24 @@ end
 
 class Position
   def initialize(number_of_players, player_index, dealer_button_index)
+    @amt_players = number_of_players
+    @position = player_index # corresponds to seat number 1 is first person to the left of the table dealer(not button)
+    @button_index = dealer_button_index # corresponds to seat number 1 is first person to the left of the table dealer(not button)
   end
-
-  def pos1?; end
-  def pos2?; end
+  # Position one will correspond to the under the gun player and so forth
+  def pos1?
+    return true if @button_index == 7 && (@position == 1)
+    return true if @button_index == 8 && (@position == 2)
+    return true if @button_index == 9 && (@position == 3)
+    return true if @button_index + 3 == @position
+  end
+  def pos2?
+    return true if @button_index == 6 && (@position == 1)
+    return true if @button_index == 7 && (@position == 2)
+    return true if @button_index == 8 && (@position == 3)
+    return true if @button_index == 9 && (@position == 4)
+    return true if @button_index + 4 == @position
+  end
   def pos3?; end
   def pos4?; end
   def pos5?; end
@@ -58,7 +72,7 @@ class Card
   def initialize(value, suit)
     #value will be 1-13 (Ace-King)
     @value = value
-    @suit = suit
+    @suit = suit #Spade,Club,Diamond,Heart
   end
 end
 
