@@ -38,7 +38,7 @@ RSpec.describe Hand do
   end
   describe "suited?" do
     it "is true if suits match" do
-
+      expect(Hand.new(card1, card2).suited?).to eq(card1.suit == card2.suit)
     end
   end
   describe "high_value" do

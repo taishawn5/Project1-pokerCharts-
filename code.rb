@@ -3,6 +3,7 @@ class Actions
   RAISE = 'raise'
   FOLD = 'fold'
   CALL = 'call'
+  ALLIN = 'allin'
 end
 
 class Position
@@ -59,6 +60,7 @@ class Hand
   def initialize(card1, card2)
     @card1 = card1
     @card2 = card2
+    @value = 0
   end
 
   def pair?
@@ -68,16 +70,35 @@ class Hand
   def high_value
     #figure out what high value should be returning.
     #strength of hand on a scale (1-100)?
+    #Scale will be 1-13 add points for big suited connectors, small connectors, etc
+    @value = @card1 + @card2
+    if @card1.suit == @card2.suit #suited cards
+      @value += 3
+    end
+    if @card1.value == @card2.value #pokcet pair
+      @value +=8
+    end
+    if @card1.value - @card2.value == 1 || @card1.value - @card2.value == -1 #connectors
+      @value += 2
+    end
+    if @card1.value - @card2.value == 2 || @card1.value - @card2.value == -2 #connectors
+      @value += 1
+    end
   end
 
   def suited?
     return true if card1.suit == card2.suit
   end
+  def value_if_suited
+    return @card1.value + @card2.value
+  end
+  end
 end
 
 
+
 class Stack
-  bb_amt = 0
+  @bb_amt = 0
 
   def initialize(current_blind, chip_stack)
     bb_amt = chip_stack / current_blind
@@ -98,6 +119,112 @@ end
 
 def calculate_action(position, hand, stack)
   #after gathering all information can use functions to calculate what the user should do.
-  return Actions::RAISE if hand.pair? && hand.high_value > 5
-  return Actions::FOLD
+  #return Actions::RAISE if hand.pair? && hand.high_value > 5
+  #return Actions::FOLD
+
+  if pos1?
+    if small?
+      if hand.high_value > 24 || (hand.pair? && hand.value_if_suited >= 10)
+        return Actions::ALLIN
+      end
+      return Actions::FOLD
+    end
+    if average?
+      if hand.high_value > 23 || (hand.pair? && hand.value_if_suited >= 10)
+        return Actions:: RAISE
+      end
+      return Actions::FOLD
+    end
+    if large?
+      if hand.high_value > 23 || (hand.pair? && hand.value_if_suited >= 6)
+        return Actions:: RAISE
+      end
+      return Actions::FOLD
+    end
+  end
+
+  if pos2?
+    if small?
+      if hand.high_value > 24 || (hand.pair? && hand.value_if_suited >= 10)
+        return Actions::ALLIN
+      end
+      return Actions::FOLD
+    end
+    if average?
+      if hand.high_value > 22 || (hand.pair? && hand.value_if_suited >= 8)
+        return Actions:: RAISE
+      end
+      return Actions::FOLD
+    end
+    if large?
+      if hand.high_value > 16 || (hand.pair? && hand.value_if_suited >= 6)
+        return Actions:: RAISE
+      end
+      return Actions::FOLD
+    end
+  end
+
+  if pos3?
+    if small?
+      if hand.high_value > 20 || (hand.pair? && hand.value_if_suited >= 10)
+        return Actions::ALLIN
+      end
+      return Actions::FOLD
+    end
+    if average?
+      if hand.high_value > 14 || (hand.pair? && hand.value_if_suited >= 4)
+        return Actions:: RAISE
+      end
+      return Actions::FOLD
+    end
+    if large?
+      if hand.high_value > 12 || (hand.pair? && hand.value_if_suited >= 4)
+        return Actions:: RAISE
+      end
+      return Actions::FOLD
+    end
+  end
+
+  if pos4?
+    if small?
+      if hand.high_value > 16 || (hand.pair? && hand.value_if_suited >= 4)
+        return Actions::ALLIN
+      end
+      return Actions::FOLD
+    end
+    if average?
+      if hand.high_value > 10 || (hand.pair? && hand.value_if_suited >= 4)
+        return Actions:: RAISE
+      end
+      return Actions::FOLD
+    end
+    if large?
+      if hand.high_value > 8 || (hand.pair? && hand.value_if_suited >= 4)
+        return Actions:: RAISE
+      end
+      return Actions::FOLD
+    end
+  end
+
+  if pos5?
+    if small?
+      if hand.high_value > 12 || (hand.pair? && hand.value_if_suited >= 4)
+        return Actions::ALLIN
+      end
+      return Actions::FOLD
+    end
+    if average?
+      if hand.high_value > 10 || (hand.pair? && hand.value_if_suited >= 4)
+        return Actions:: RAISE
+      end
+      return Actions::FOLD
+    end
+    if large?
+      if hand.high_value > 8 || (hand.pair? && hand.value_if_suited >= 4)
+        return Actions:: RAISE
+      end
+      return Actions::FOLD
+    end
+  end
+
 end
