@@ -87,41 +87,40 @@ class Hand
   end
 
   def suited?
-    return true if card1.suit == card2.suit
+    if card1.suit == card2.suit
+      return true
+    end
+    return false
   end
+
   def value_if_suited
     return @card1.value + @card2.value
-  end
   end
 end
 
 
 
 class Stack
-  @bb_amt = 0
-
   def initialize(current_blind, chip_stack)
-    bb_amt = chip_stack / current_blind
+    @bb_amt = chip_stack / current_blind
   end
 
   def small?
-    return true if bb_amt <= 20
+    return true if @bb_amt <= 20
   end
 
   def average?
-    return true if bb_amt > 20 && bb_amt <= 40
+    return true if @bb_amt > 20 && @bb_amt <= 40
   end
   def large?
-    return true if bb_amt > 40
+    return true if @bb_amt > 40
   end
 end
 
 
 def calculate_action(position, hand, stack)
-  #after gathering all information can use functions to calculate what the user should do.
-  #return Actions::RAISE if hand.pair? && hand.high_value > 5
-  #return Actions::FOLD
-
+  # Should separate each calculation by suited hands, pairs and off suits so there
+  # isn't hands fitting multiple calculations.
   if pos1?
     if small?
       if hand.high_value > 24 || (hand.pair? && hand.value_if_suited >= 10)

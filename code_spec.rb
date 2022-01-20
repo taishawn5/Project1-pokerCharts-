@@ -41,13 +41,33 @@ RSpec.describe Hand do
       expect(Hand.new(card1, card2).suited?).to eq(card1.suit == card2.suit)
     end
   end
+  # how to handle each if case when writing tests
   describe "high_value" do
     it "returns the highest card value" do
 
     end
   end
+  describe "value_if_suited" do
+    it "is true if card values equal expected value"
+    expect(Hand.new(card1, card2).value_if_suited).to eq(card1.value + card2.value)
+  end
 end
 
+# needs help with what variables to pass in.
+RSpec.describe Stack do
+  describe "small" do
+    it "is true if BB is less than  20"
+    expect(Stack.new(current_blind, chip_stack).small?).to eq(bb_amt < 20)
+  end
+  describe "average" do
+    it "is true if BB is more than 20 and less than 40"
+    expect(Stack.new(current_blind, chip_stack).average?).to eq(bb_amt > 20 && bb_amt < 40)
+  end
+  describe "large" do
+    it "is true if BB is more than 40"
+    expect(Stack.new(current_blind, chip_stack).large?).to eq(bb_amt > 40)
+  end
+end
 
 RSpec.describe "calculate_action" do
   it "is RAISE when a pos1 has a high-value pair hand" do
