@@ -72,7 +72,7 @@ class Hand
     #strength of hand on a scale (1-100)?
     #Scale will be 1-13 add points for big suited connectors, small connectors, etc
     @value = @card1 + @card2
-    if @card1.suit == @card2.suit #suited cards
+    if suited? #suited cards
       @value += 3
     end
     if @card1.value == @card2.value #pokcet pair
@@ -93,7 +93,7 @@ class Hand
     return false
   end
 
-  def value_if_suited
+  def value_if_paired
     return @card1.value + @card2.value
   end
 end
@@ -117,113 +117,115 @@ class Stack
   end
 end
 
+def calculate_pos1(stack_size,hand,hand_combo)
 
+end
+# thinking of using this function to call three different calculate functions.
+# Suited Hands, Off suit hands and pairs. That way there are no hands qualifying for
+# certain high hand values that it shouldn't qualify for.
 def calculate_action(position, hand, stack)
-  # Should separate each calculation by suited hands, pairs and off suits so there
-  # isn't hands fitting multiple calculations.
-  if pos1?
-    if small?
-      if hand.high_value > 24 || (hand.pair? && hand.value_if_suited >= 10)
+  if position.pos1?
+    if stack.small?
+      if hand.high_value > 24 || (hand.pair? && hand.value_if_paired >= 10)
         return Actions::ALLIN
       end
       return Actions::FOLD
     end
-    if average?
-      if hand.high_value > 23 || (hand.pair? && hand.value_if_suited >= 10)
-        return Actions:: RAISE
+    if stack.average?
+      if hand.high_value > 23 || (hand.pair? && hand.value_if_paired >= 10)
+        return Actions::RAISE
       end
       return Actions::FOLD
     end
-    if large?
-      if hand.high_value > 23 || (hand.pair? && hand.value_if_suited >= 6)
-        return Actions:: RAISE
+    if stack.large?
+      if hand.high_value > 23 || (hand.pair? && hand.value_if_paired >= 6)
+        return Actions::RAISE
       end
       return Actions::FOLD
     end
   end
 
-  if pos2?
-    if small?
-      if hand.high_value > 24 || (hand.pair? && hand.value_if_suited >= 10)
+  if position.pos2?
+    if stack.small?
+      if hand.high_value > 24 || (hand.pair? && hand.value_if_paired >= 10)
         return Actions::ALLIN
       end
       return Actions::FOLD
     end
-    if average?
-      if hand.high_value > 22 || (hand.pair? && hand.value_if_suited >= 8)
-        return Actions:: RAISE
+    if stack.average?
+      if hand.high_value > 22 || (hand.pair? && hand.value_if_paired >= 8)
+        return Actions::RAISE
       end
       return Actions::FOLD
     end
-    if large?
-      if hand.high_value > 16 || (hand.pair? && hand.value_if_suited >= 6)
-        return Actions:: RAISE
+    if stack.large?
+      if hand.high_value > 16 || (hand.pair? && hand.value_if_paired >= 6)
+        return Actions::RAISE
       end
       return Actions::FOLD
     end
   end
 
-  if pos3?
-    if small?
-      if hand.high_value > 20 || (hand.pair? && hand.value_if_suited >= 10)
+  if position.pos3?
+    if stack.small?
+      if hand.high_value > 20 || (hand.pair? && hand.value_if_paired >= 10)
         return Actions::ALLIN
       end
       return Actions::FOLD
     end
-    if average?
-      if hand.high_value > 14 || (hand.pair? && hand.value_if_suited >= 4)
-        return Actions:: RAISE
+    if stack.average?
+      if hand.high_value > 14 || (hand.pair? && hand.value_if_paired >= 4)
+        return Actions::RAISE
       end
       return Actions::FOLD
     end
-    if large?
-      if hand.high_value > 12 || (hand.pair? && hand.value_if_suited >= 4)
-        return Actions:: RAISE
+    if stack.large?
+      if hand.high_value > 12 || (hand.pair? && hand.value_if_paired >= 4)
+        return Actions::RAISE
       end
       return Actions::FOLD
     end
   end
 
-  if pos4?
-    if small?
-      if hand.high_value > 16 || (hand.pair? && hand.value_if_suited >= 4)
+  if position.pos4?
+    if stack.small?
+      if hand.high_value > 16 || (hand.pair? && hand.value_if_paired >= 4)
         return Actions::ALLIN
       end
       return Actions::FOLD
     end
-    if average?
-      if hand.high_value > 10 || (hand.pair? && hand.value_if_suited >= 4)
-        return Actions:: RAISE
+    if stack.average?
+      if hand.high_value > 10 || (hand.pair? && hand.value_if_paired >= 4)
+        return Actions::RAISE
       end
       return Actions::FOLD
     end
-    if large?
-      if hand.high_value > 8 || (hand.pair? && hand.value_if_suited >= 4)
-        return Actions:: RAISE
+    if stack.large?
+      if hand.high_value > 8 || (hand.pair? && hand.value_if_paired >= 4)
+        return Actions::RAISE
       end
       return Actions::FOLD
     end
   end
 
-  if pos5?
-    if small?
-      if hand.high_value > 12 || (hand.pair? && hand.value_if_suited >= 4)
+  if position.pos5?
+    if stack.small?
+      if hand.high_value > 12 || (hand.pair? && hand.value_if_paired >= 4)
         return Actions::ALLIN
       end
       return Actions::FOLD
     end
-    if average?
-      if hand.high_value > 10 || (hand.pair? && hand.value_if_suited >= 4)
-        return Actions:: RAISE
+    if stack.average?
+      if hand.high_value > 10 || (hand.pair? && hand.value_if_paired >= 4)
+        return Actions::RAISE
       end
       return Actions::FOLD
     end
-    if large?
-      if hand.high_value > 8 || (hand.pair? && hand.value_if_suited >= 4)
-        return Actions:: RAISE
+    if stack.large?
+      if hand.high_value > 8 || (hand.pair? && hand.value_if_paired >= 4)
+        return Actions::RAISE
       end
       return Actions::FOLD
     end
   end
-
 end

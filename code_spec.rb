@@ -55,9 +55,9 @@ RSpec.describe Hand do
 
     end
   end
-  describe "value_if_suited" do
+  describe "value_if_paired" do
     it "is true if card values equal expected value"
-    expect(Hand.new(Card.new(5,'Clubs'), Card.new(5,'Spades')).value_if_suited).to eq(10)
+    expect(Hand.new(Card.new(5,'Clubs'), Card.new(5,'Spades')).value_if_paired).to eq(10)
   end
 end
 
