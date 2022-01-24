@@ -95,6 +95,10 @@ class Hand
     return value
   end
 
+  def paired_strength
+    return self.pair? ? (@card1.value * 2) : 0
+  end
+
   def suited?
     if card1.suit == card2.suit
       return true
@@ -132,106 +136,46 @@ end
 def calculate_action(position, hand, stack)
   if position.pos1?
     if stack.small?
-      if hand.strength > 24 || (hand.pair? && hand.value_if_paired >= 10)
-        return Actions::ALLIN
-      end
-      return Actions::FOLD
+      return Actions::ALLIN if hand.strength > 24 || hand.paired_strength >= 10
+    elsif stack.average?
+      return Actions::RAISE if hand.strength > 23 || hand.paired_strength >= 10
+    elsif stack.large?
+      return Actions::RAISE if hand.strength > 23 || hand.paired_strength >= 6
     end
-    if stack.average?
-      if hand.strength > 23 || (hand.pair? && hand.value_if_paired >= 10)
-        return Actions::RAISE
-      end
-      return Actions::FOLD
-    end
-    if stack.large?
-      if hand.strength > 23 || (hand.pair? && hand.value_if_paired >= 6)
-        return Actions::RAISE
-      end
-      return Actions::FOLD
-    end
-  end
-
-  if position.pos2?
+  elsif position.pos2?
     if stack.small?
-      if hand.strength > 24 || (hand.pair? && hand.value_if_paired >= 10)
-        return Actions::ALLIN
-      end
-      return Actions::FOLD
+      return Actions::ALLIN if hand.strength > 24 || hand.paired_strength >= 10
+    elsif stack.average?
+      return Actions::RAISE if hand.strength > 22 || hand.paired_strength >= 8
+    elsif stack.large?
+      return Actions::RAISE if hand.strength > 16 || hand.paired_strength >= 6
     end
-    if stack.average?
-      if hand.strength > 22 || (hand.pair? && hand.value_if_paired >= 8)
-        return Actions::RAISE
-      end
-      return Actions::FOLD
-    end
-    if stack.large?
-      if hand.strength > 16 || (hand.pair? && hand.value_if_paired >= 6)
-        return Actions::RAISE
-      end
-      return Actions::FOLD
-    end
-  end
-
-  if position.pos3?
+  elsif position.pos3?
     if stack.small?
-      if hand.strength > 20 || (hand.pair? && hand.value_if_paired >= 10)
-        return Actions::ALLIN
-      end
-      return Actions::FOLD
+      return Actions::ALLIN if hand.strength > 20 || hand.paired_strength >= 10
+    elsif stack.average?
+      return Actions::RAISE if hand.strength > 14 || hand.paired_strength >= 4
+    elsif stack.large?
+      return Actions::RAISE if hand.strength > 12 || hand.paired_strength >= 4
     end
-    if stack.average?
-      if hand.strength > 14 || (hand.pair? && hand.value_if_paired >= 4)
-        return Actions::RAISE
-      end
-      return Actions::FOLD
-    end
-    if stack.large?
-      if hand.strength > 12 || (hand.pair? && hand.value_if_paired >= 4)
-        return Actions::RAISE
-      end
-      return Actions::FOLD
-    end
-  end
-
-  if position.pos4?
+  elsif position.pos4?
     if stack.small?
-      if hand.strength > 16 || (hand.pair? && hand.value_if_paired >= 4)
-        return Actions::ALLIN
-      end
-      return Actions::FOLD
+      return Actions::ALLIN if hand.strength > 16 || hand.paired_strength >= 4
+    elsif stack.average?
+      return Actions::RAISE if hand.strength > 10 || hand.paired_strength >= 4
+    elsif stack.large?
+      return Actions::RAISE if hand.strength > 8 || hand.paired_strength >= 4
     end
-    if stack.average?
-      if hand.strength > 10 || (hand.pair? && hand.value_if_paired >= 4)
-        return Actions::RAISE
-      end
-      return Actions::FOLD
-    end
-    if stack.large?
-      if hand.strength > 8 || (hand.pair? && hand.value_if_paired >= 4)
-        return Actions::RAISE
-      end
-      return Actions::FOLD
-    end
-  end
-
-  if position.pos5?
+  elsif position.pos5?
     if stack.small?
-      if hand.strength > 12 || (hand.pair? && hand.value_if_paired >= 4)
-        return Actions::ALLIN
-      end
-      return Actions::FOLD
+      return Actions::ALLIN if hand.strength > 12 || hand.paired_strength >= 4
+    elsif stack.average?
+      return Actions::RAISE if hand.strength > 10 || hand.paired_strength >= 4
+    elsif stack.large?
+      return Actions::RAISE if hand.strength > 8 || hand.paired_strength >= 4
     end
-    if stack.average?
-      if hand.strength > 10 || (hand.pair? && hand.value_if_paired >= 4)
-        return Actions::RAISE
-      end
-      return Actions::FOLD
-    end
-    if stack.large?
-      if hand.strength > 8 || (hand.pair? && hand.value_if_paired >= 4)
-        return Actions::RAISE
-      end
-      return Actions::FOLD
-    end
+  else
+    raise RuntimeError, "unknown pos"
   end
+  return Actions::FOLD
 end
