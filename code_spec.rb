@@ -56,24 +56,28 @@ RSpec.describe Hand do
     end
   end
   describe "value_if_paired" do
-    it "is true if card values equal expected value"
-    expect(Hand.new(Card.new(5,'Clubs'), Card.new(5,'Spades')).value_if_paired).to eq(10)
+    it "is true if card values equal expected value" do
+      expect(Hand.new(Card.new(5,'Clubs'), Card.new(5,'Spades')).value_if_paired).to eq(10)
+    end
   end
 end
 
 # needs help with what variables to pass in.
 RSpec.describe Stack do
   describe "small" do
-    it "is true if BB is less than  20"
-    expect(Stack.new(current_blind = 2, chip_stack = 30).small?).to eq(true)
+    it "is true if BB is less than  20" do
+      expect(Stack.new(current_blind = 2, chip_stack = 30).small?).to eq(true)
+    end
   end
   describe "average" do
-    it "is true if BB is more than 20 and less than 40"
-    expect(Stack.new(current_blind = 2, chip_stack = 50).average?).to eq(true)
+    it "is true if BB is more than 20 and less than 40" do
+      expect(Stack.new(current_blind = 2, chip_stack = 50).average?).to eq(true)
+    end
   end
   describe "large" do
-    it "is true if BB is more than 40"
-    expect(Stack.new(current_blind = 2, chip_stack = 100).large?).to eq(true)
+    it "is true if BB is more than 40" do
+      expect(Stack.new(current_blind = 2, chip_stack = 100).large?).to eq(true)
+    end
   end
 end
 
