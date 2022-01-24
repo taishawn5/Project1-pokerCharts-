@@ -18,21 +18,24 @@ class Position
     return true if @button_index == 7 && (@position == 1) || (@position == 2)
     return true if @button_index == 8 && (@position == 2) || (@position == 3)
     return true if @button_index == 9 && (@position == 3) || (@position == 4)
-    return true if @button_index + 3 == @position || @button_index + 4 == @position
+    return true if poker_table_add(@amt_players, @button_index, 3) == @position || poker_table_add(@amt_players, @button_index, 4) == @position
+    return false
   end
   def pos2?
     return true if @button_index == 4 && (@position == 1)
     return true if @button_index == 5 && (@position == 1) || (@position == 2)
     return true if @button_index == 6 && (@position == 2) || (@position == 3)
     return true if @button_index == 7 && (@position == 3) || (@position == 4)
-    return true if @button_index + 5 == @position || @button_index + 6 == @position
+    return true if poker_table_add(@amt_players, @button_index, 5) == @position || poker_table_add(@amt_players, @button_index, 6) == @position
+    return false
   end
   def pos3?
     return true if @button_index == 2 && (@position == 1)
     return true if @button_index == 3 && (@position == 1) || (@position == 2)
     return true if @button_index == 4 && (@position == 2) || (@position == 3)
     return true if @button_index == 5 && (@position == 3) || (@position == 4)
-    return true if @button_index + 7 == @position || @button_index + 8 == @position
+    return true if poker_table_add(@amt_players, @button_index, 7) == @position || poker_table_add(@amt_players, @button_index, 8) == @position
+    return false
   end
   def pos4?
     return true if @button_index == @position
@@ -42,7 +45,18 @@ class Position
       return true if @position == 1
     end
     return true if @button_index + 1 == @position
+    return false
   end
+end
+
+# (14, 9) => 5
+#
+def poker_table_mod(x, y)
+  return x.modulo(y)
+end
+
+def poker_table_add(players, x, y)
+  return poker_table_mod(x + y, players)
 end
 
 class Card
@@ -60,30 +74,25 @@ class Hand
   def initialize(card1, card2)
     @card1 = card1
     @card2 = card2
-    @value = 0
   end
 
   def pair?
     return true if card1.value == card2.value
   end
 
-  def high_value
-    #figure out what high value should be returning.
-    #strength of hand on a scale (1-100)?
-    #Scale will be 1-13 add points for big suited connectors, small connectors, etc
-    @value = @card1 + @card2
+  def strength
+    value = @card1.value + @card2.value
     if suited? #suited cards
-      @value += 3
+      value += 3
     end
     if @card1.value == @card2.value #pokcet pair
-      @value +=8
+      value += 8
+    elsif @card1.value - @card2.value == 1 || @card1.value - @card2.value == -1 #connectors
+      value += 2
+    elsif @card1.value - @card2.value == 2 || @card1.value - @card2.value == -2 #connectors
+      value += 1
     end
-    if @card1.value - @card2.value == 1 || @card1.value - @card2.value == -1 #connectors
-      @value += 2
-    end
-    if @card1.value - @card2.value == 2 || @card1.value - @card2.value == -2 #connectors
-      @value += 1
-    end
+    return value
   end
 
   def suited?
@@ -94,6 +103,7 @@ class Hand
   end
 
   def value_if_paired
+    return nil unless self.pair?
     return @card1.value + @card2.value
   end
 end
@@ -102,43 +112,39 @@ end
 
 class Stack
   def initialize(current_blind, chip_stack)
-    @bb_amt = chip_stack / current_blind
+    @bb_amt = chip_stack / Float(current_blind)
   end
-
   def small?
-    return true if @bb_amt <= 20
+    return @bb_amt <= 20
   end
-
   def average?
-    return true if @bb_amt > 20 && @bb_amt <= 40
+    return @bb_amt > 20 && @bb_amt <= 40
   end
   def large?
-    return true if @bb_amt > 40
+    return @bb_amt > 40
   end
 end
 
-def calculate_pos1(stack_size,hand,hand_combo)
 
-end
 # thinking of using this function to call three different calculate functions.
 # Suited Hands, Off suit hands and pairs. That way there are no hands qualifying for
 # certain high hand values that it shouldn't qualify for.
 def calculate_action(position, hand, stack)
   if position.pos1?
     if stack.small?
-      if hand.high_value > 24 || (hand.pair? && hand.value_if_paired >= 10)
+      if hand.strength > 24 || (hand.pair? && hand.value_if_paired >= 10)
         return Actions::ALLIN
       end
       return Actions::FOLD
     end
     if stack.average?
-      if hand.high_value > 23 || (hand.pair? && hand.value_if_paired >= 10)
+      if hand.strength > 23 || (hand.pair? && hand.value_if_paired >= 10)
         return Actions::RAISE
       end
       return Actions::FOLD
     end
     if stack.large?
-      if hand.high_value > 23 || (hand.pair? && hand.value_if_paired >= 6)
+      if hand.strength > 23 || (hand.pair? && hand.value_if_paired >= 6)
         return Actions::RAISE
       end
       return Actions::FOLD
@@ -147,19 +153,19 @@ def calculate_action(position, hand, stack)
 
   if position.pos2?
     if stack.small?
-      if hand.high_value > 24 || (hand.pair? && hand.value_if_paired >= 10)
+      if hand.strength > 24 || (hand.pair? && hand.value_if_paired >= 10)
         return Actions::ALLIN
       end
       return Actions::FOLD
     end
     if stack.average?
-      if hand.high_value > 22 || (hand.pair? && hand.value_if_paired >= 8)
+      if hand.strength > 22 || (hand.pair? && hand.value_if_paired >= 8)
         return Actions::RAISE
       end
       return Actions::FOLD
     end
     if stack.large?
-      if hand.high_value > 16 || (hand.pair? && hand.value_if_paired >= 6)
+      if hand.strength > 16 || (hand.pair? && hand.value_if_paired >= 6)
         return Actions::RAISE
       end
       return Actions::FOLD
@@ -168,19 +174,19 @@ def calculate_action(position, hand, stack)
 
   if position.pos3?
     if stack.small?
-      if hand.high_value > 20 || (hand.pair? && hand.value_if_paired >= 10)
+      if hand.strength > 20 || (hand.pair? && hand.value_if_paired >= 10)
         return Actions::ALLIN
       end
       return Actions::FOLD
     end
     if stack.average?
-      if hand.high_value > 14 || (hand.pair? && hand.value_if_paired >= 4)
+      if hand.strength > 14 || (hand.pair? && hand.value_if_paired >= 4)
         return Actions::RAISE
       end
       return Actions::FOLD
     end
     if stack.large?
-      if hand.high_value > 12 || (hand.pair? && hand.value_if_paired >= 4)
+      if hand.strength > 12 || (hand.pair? && hand.value_if_paired >= 4)
         return Actions::RAISE
       end
       return Actions::FOLD
@@ -189,19 +195,19 @@ def calculate_action(position, hand, stack)
 
   if position.pos4?
     if stack.small?
-      if hand.high_value > 16 || (hand.pair? && hand.value_if_paired >= 4)
+      if hand.strength > 16 || (hand.pair? && hand.value_if_paired >= 4)
         return Actions::ALLIN
       end
       return Actions::FOLD
     end
     if stack.average?
-      if hand.high_value > 10 || (hand.pair? && hand.value_if_paired >= 4)
+      if hand.strength > 10 || (hand.pair? && hand.value_if_paired >= 4)
         return Actions::RAISE
       end
       return Actions::FOLD
     end
     if stack.large?
-      if hand.high_value > 8 || (hand.pair? && hand.value_if_paired >= 4)
+      if hand.strength > 8 || (hand.pair? && hand.value_if_paired >= 4)
         return Actions::RAISE
       end
       return Actions::FOLD
@@ -210,19 +216,19 @@ def calculate_action(position, hand, stack)
 
   if position.pos5?
     if stack.small?
-      if hand.high_value > 12 || (hand.pair? && hand.value_if_paired >= 4)
+      if hand.strength > 12 || (hand.pair? && hand.value_if_paired >= 4)
         return Actions::ALLIN
       end
       return Actions::FOLD
     end
     if stack.average?
-      if hand.high_value > 10 || (hand.pair? && hand.value_if_paired >= 4)
+      if hand.strength > 10 || (hand.pair? && hand.value_if_paired >= 4)
         return Actions::RAISE
       end
       return Actions::FOLD
     end
     if stack.large?
-      if hand.high_value > 8 || (hand.pair? && hand.value_if_paired >= 4)
+      if hand.strength > 8 || (hand.pair? && hand.value_if_paired >= 4)
         return Actions::RAISE
       end
       return Actions::FOLD
