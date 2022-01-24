@@ -129,10 +129,61 @@ class Stack
   end
 end
 
+def calculate_helper(hand)
+  if hand.suited?
+    calculate_suited_action(position, hand, stack)
+  else
+    calculate_action(position, hand, stack)
+  end
+end
 
-# thinking of using this function to call three different calculate functions.
-# Suited Hands, Off suit hands and pairs. That way there are no hands qualifying for
-# certain high hand values that it shouldn't qualify for.
+def calculate_suited_action(position, hand, stack)
+  if position.pos1?
+    if stack.small?
+      return Actions::ALLIN if hand.strength > 26
+    elsif stack.average?
+      return Actions::RAISE if hand.strength > 25
+    elsif stack.large?
+      return Actions::RAISE if hand.strength > 23
+    end
+  elsif position.pos2?
+    if stack.small?
+      return Actions::ALLIN if hand.strength > 24
+    elsif stack.average?
+      return Actions::RAISE if hand.strength > 22
+    elsif stack.large?
+      return Actions::RAISE if hand.strength > 18
+    end
+  elsif position.pos3?
+    if stack.small?
+      return Actions::ALLIN if hand.strength > 20
+    elsif stack.average?
+      return Actions::RAISE if hand.strength > 16
+    elsif stack.large?
+      return Actions::RAISE if hand.strength > 14
+    end
+  elsif position.pos4?
+    if stack.small?
+      return Actions::ALLIN if hand.strength > 19
+    elsif stack.average?
+      return Actions::RAISE if hand.strength > 12
+    elsif stack.large?
+      return Actions::RAISE if hand.strength > 10
+    end
+  elsif position.pos5?
+    if stack.small?
+      return Actions::ALLIN if hand.strength > 14
+    elsif stack.average?
+      return Actions::RAISE if hand.strength > 12
+    elsif stack.large?
+      return Actions::RAISE if hand.strength > 10
+    end
+  else
+    raise RuntimeError, "unknown pos"
+  end
+  return Actions::FOLD
+end
+
 def calculate_action(position, hand, stack)
   if position.pos1?
     if stack.small?
