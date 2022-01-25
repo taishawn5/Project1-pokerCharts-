@@ -87,9 +87,9 @@ class Hand
     end
     if @card1.value == @card2.value #pokcet pair
       value += 8
-    elsif @card1.value - @card2.value == 1 || @card1.value - @card2.value == -1 #connectors
+    elsif (@card1.value - @card2.value).abs == 1 #connectors
       value += 2
-    elsif @card1.value - @card2.value == 2 || @card1.value - @card2.value == -2 #connectors
+    elsif (@card1.value - @card2.value).abs == 2 #connectors
       value += 1
     end
     return value
