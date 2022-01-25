@@ -54,12 +54,12 @@ RSpec.describe Hand do
 
     end
   end
-  describe "value_if_paired" do
+  describe "paired strength" do
     it "is the paired value if paired" do
-      expect(Hand.new(Card.new(5,'Clubs'), Card.new(5,'Spades')).value_if_paired).to eq(10)
+      expect(Hand.new(Card.new(5,'Clubs'), Card.new(5,'Spades')).paired_strength).to eq(10)
     end
     it "is nil if not paired" do
-      expect(Hand.new(Card.new(5,'Clubs'), Card.new(4,'Spades')).value_if_paired).to eq(nil)
+      expect(Hand.new(Card.new(5,'Clubs'), Card.new(4,'Spades')).paired_strength).to eq(0)
     end
   end
 end
@@ -88,27 +88,6 @@ RSpec.describe Stack do
   end
 end
 
-RSpec.describe "calculate_suited_action" do
-  it "is ALLIN or RAISE when a pos1 has a high-value hand" do
-    expect(calculate_suited_action(Position.new(9, 3, 9),
-                            Hand.new(Card.new(14,'Spades'), Card.new(13, 'Spades')),
-                            Stack.new(current_blind = 2, chip_stack = 10))).to eq(Actions::ALLIN)
-
-    expect(calculate_suited_action(Position.new(9, 3, 9),
-                            Hand.new(Card.new(14,'Spades'), Card.new(13, 'Spades')),
-                            Stack.new(current_blind = 2, chip_stack = 46))).to eq(Actions::RAISE)
-
-    expect(calculate_suited_action(Position.new(9, 3, 9),
-                            Hand.new(Card.new(14,'Spades'), Card.new(13, 'Spades')),
-                            Stack.new(current_blind = 2, chip_stack = 100))).to eq(Actions::RAISE)
-  end
-  it "is FOLD when a hand strength doesn't meet the standards to raise or go all in" do
-    expect(calculate_suited_action(Position.new(9, 3, 9),
-                            Hand.new(Card.new(2,'Spades'), Card.new(3, 'Spades')),
-                            Stack.new(current_blind = 2, chip_stack = 10))).to eq(Actions::FOLD)
-  end
-end
-
 RSpec.describe "calculate_action" do
   it "is ALLIN or RAISE when a pos1 has a high-value hand" do
     expect(calculate_action(Position.new(9, 3, 9),
@@ -122,6 +101,20 @@ RSpec.describe "calculate_action" do
     expect(calculate_action(Position.new(9, 3, 9),
                             Hand.new(Card.new(14,'Spades'), Card.new(13, 'Spades')),
                             Stack.new(current_blind = 2, chip_stack = 100))).to eq(Actions::RAISE)
+  end
+
+  it "is ALLIN or RAISE when a pos1 has a high-value hand" do
+    expect(calculate_action(Position.new(9, 3, 9),
+                                   Hand.new(Card.new(14,'Spades'), Card.new(13, 'Spades')),
+                                   Stack.new(current_blind = 2, chip_stack = 10))).to eq(Actions::ALLIN)
+
+    expect(calculate_action(Position.new(9, 3, 9),
+                                   Hand.new(Card.new(14,'Spades'), Card.new(13, 'Spades')),
+                                   Stack.new(current_blind = 2, chip_stack = 46))).to eq(Actions::RAISE)
+
+    expect(calculate_action(Position.new(9, 3, 9),
+                                   Hand.new(Card.new(14,'Spades'), Card.new(13, 'Spades')),
+                                   Stack.new(current_blind = 2, chip_stack = 100))).to eq(Actions::RAISE)
   end
   it "is FOLD when a hand strength doesn't meet the standards to raise or go all in" do
     expect(calculate_action(Position.new(9, 3, 9),
