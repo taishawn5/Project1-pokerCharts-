@@ -199,31 +199,31 @@ def calculate_action(position, hand, stack)
     elsif stack.average?
       return Actions::RAISE if hand.strength > 22 || hand.paired_strength >= 8
     elsif stack.large?
-      return Actions::RAISE if hand.strength > 16 || hand.paired_strength >= 6
+      return Actions::RAISE if hand.strength > 20 || hand.paired_strength >= 6
     end
   elsif position.pos3?
     if stack.small?
       return Actions::ALLIN if hand.strength > 20 || hand.paired_strength >= 10
     elsif stack.average?
-      return Actions::RAISE if hand.strength > 14 || hand.paired_strength >= 4
+      return Actions::RAISE if hand.strength > 17 || hand.paired_strength >= 4
     elsif stack.large?
-      return Actions::RAISE if hand.strength > 12 || hand.paired_strength >= 4
+      return Actions::RAISE if hand.strength > 17 || hand.paired_strength >= 4
     end
   elsif position.pos4?
     if stack.small?
       return Actions::ALLIN if hand.strength > 16 || hand.paired_strength >= 4
     elsif stack.average?
-      return Actions::RAISE if hand.strength > 10 || hand.paired_strength >= 4
+      return Actions::RAISE if hand.strength > 13 || hand.paired_strength >= 4
     elsif stack.large?
-      return Actions::RAISE if hand.strength > 8 || hand.paired_strength >= 4
+      return Actions::RAISE if hand.strength > 9 || hand.paired_strength >= 4
     end
   elsif position.pos5?
     if stack.small?
-      return Actions::ALLIN if hand.strength > 12 || hand.paired_strength >= 4
+      return Actions::ALLIN if hand.strength > 17 || hand.paired_strength >= 4
     elsif stack.average?
-      return Actions::RAISE if hand.strength > 10 || hand.paired_strength >= 4
+      return Actions::RAISE if hand.strength > 13 || hand.paired_strength >= 4
     elsif stack.large?
-      return Actions::RAISE if hand.strength > 8 || hand.paired_strength >= 4
+      return Actions::RAISE if hand.strength > 9 || hand.paired_strength >= 4
     end
   else
     raise RuntimeError, "unknown pos"
