@@ -105,13 +105,7 @@ class Hand
     end
     return false
   end
-
-  def value_if_paired
-    return nil unless self.pair?
-    return @card1.value + @card2.value
-  end
 end
-
 
 
 class Stack
@@ -129,100 +123,61 @@ class Stack
   end
 end
 
-def calculate_helper(hand)
-  if hand.suited?
-    calculate_suited_action(position, hand, stack)
-  else
-    calculate_action(position, hand, stack)
-  end
-end
-
-def calculate_suited_action(position, hand, stack)
-  if position.pos1?
-    if stack.small?
-      return Actions::ALLIN if hand.strength > 26
-    elsif stack.average?
-      return Actions::RAISE if hand.strength > 25
-    elsif stack.large?
-      return Actions::RAISE if hand.strength > 23
-    end
-  elsif position.pos2?
-    if stack.small?
-      return Actions::ALLIN if hand.strength > 24
-    elsif stack.average?
-      return Actions::RAISE if hand.strength > 22
-    elsif stack.large?
-      return Actions::RAISE if hand.strength > 18
-    end
-  elsif position.pos3?
-    if stack.small?
-      return Actions::ALLIN if hand.strength > 20
-    elsif stack.average?
-      return Actions::RAISE if hand.strength > 16
-    elsif stack.large?
-      return Actions::RAISE if hand.strength > 14
-    end
-  elsif position.pos4?
-    if stack.small?
-      return Actions::ALLIN if hand.strength > 19
-    elsif stack.average?
-      return Actions::RAISE if hand.strength > 12
-    elsif stack.large?
-      return Actions::RAISE if hand.strength > 10
-    end
-  elsif position.pos5?
-    if stack.small?
-      return Actions::ALLIN if hand.strength > 14
-    elsif stack.average?
-      return Actions::RAISE if hand.strength > 12
-    elsif stack.large?
-      return Actions::RAISE if hand.strength > 10
-    end
-  else
-    raise RuntimeError, "unknown pos"
-  end
-  return Actions::FOLD
-end
 
 def calculate_action(position, hand, stack)
   if position.pos1?
     if stack.small?
+      return Actions::ALLIN if hand.suited? && hand.strength > 26
       return Actions::ALLIN if hand.strength > 24 || hand.paired_strength >= 10
     elsif stack.average?
+      return Actions::RAISE if hand.suited? && hand.strength > 25
       return Actions::RAISE if hand.strength > 23 || hand.paired_strength >= 10
     elsif stack.large?
+      return Actions::RAISE if hand.suited? && hand.strength > 23
       return Actions::RAISE if hand.strength > 23 || hand.paired_strength >= 6
     end
   elsif position.pos2?
     if stack.small?
+      return Actions::ALLIN if hand.suited? && hand.strength > 24
       return Actions::ALLIN if hand.strength > 24 || hand.paired_strength >= 10
     elsif stack.average?
+      return Actions::RAISE if hand.suited? && hand.strength > 22
       return Actions::RAISE if hand.strength > 22 || hand.paired_strength >= 8
     elsif stack.large?
+      return Actions::RAISE if hand.suited? && hand.strength > 18
       return Actions::RAISE if hand.strength > 20 || hand.paired_strength >= 6
     end
   elsif position.pos3?
     if stack.small?
+      return Actions::ALLIN if hand.suited? && hand.strength > 20
       return Actions::ALLIN if hand.strength > 20 || hand.paired_strength >= 10
     elsif stack.average?
+      return Actions::RAISE if hand.suited? && hand.strength > 16
       return Actions::RAISE if hand.strength > 17 || hand.paired_strength >= 4
     elsif stack.large?
+      return Actions::RAISE if hand.suited? && hand.strength > 14
       return Actions::RAISE if hand.strength > 17 || hand.paired_strength >= 4
     end
   elsif position.pos4?
     if stack.small?
+      return Actions::ALLIN if hand.suited? && hand.strength > 19
       return Actions::ALLIN if hand.strength > 16 || hand.paired_strength >= 4
     elsif stack.average?
+      return Actions::RAISE if hand.suited? && hand.strength > 12
       return Actions::RAISE if hand.strength > 13 || hand.paired_strength >= 4
     elsif stack.large?
+      return Actions::RAISE if hand.suited? && hand.strength > 10
       return Actions::RAISE if hand.strength > 9 || hand.paired_strength >= 4
     end
   elsif position.pos5?
     if stack.small?
+      return Actions::ALLIN if hand.suited? && hand.strength > 14
       return Actions::ALLIN if hand.strength > 17 || hand.paired_strength >= 4
     elsif stack.average?
+      return Actions::RAISE if hand.suited? && hand.strength > 12
       return Actions::RAISE if hand.strength > 13 || hand.paired_strength >= 4
     elsif stack.large?
+      return Actions::RAISE if hand.suited? && hand.strength > 10
       return Actions::RAISE if hand.strength > 9 || hand.paired_strength >= 4
     end
   else
